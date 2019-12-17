@@ -2,45 +2,15 @@ import React from "react";
 import "./App.css";
 
 //REDUX
-import { createStore, combineReducers } from "redux";
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
+import store from "./store";
 
-function counterReducer(state = { count: 0 }, action) {
-	switch (action.type) {
-		case "INCREMENT_COUNT":
-			return {
-				...state,
-				count: state.count + 1
-			};
-		case "DECREMENT_COUNT":
-			return {
-				...state,
-				count: state.count - 1
-			};
+//React-cookie
+import { withCookies } from "react-cookie";
 
-		default:
-			return state;
-	}
-}
-
-function nameReducer(state = { name: "" }, action) {
-	switch (action.type) {
-		case "UPDATE_NAME":
-			return {
-				...state,
-				name: action.payload
-			};
-		default:
-			return state;
-	}
-}
-
-const rootReducer = combineReducers({
-	counterReducer,
-	nameReducer
-});
-const INITIAL_STATE = {};
-const store = createStore(rootReducer, INITIAL_STATE);
+//components
+import Counter from "./counter";
+import Name from "./name";
 
 function App() {
 	return (
@@ -51,52 +21,4 @@ function App() {
 	);
 }
 
-function Counter() {
-	const { count, name } = useSelector(state => ({
-		...state.counterReducer,
-		...state.nameReducer
-	}));
-	const dispatch = useDispatch();
-
-	function incrementCount() {
-		dispatch({
-			type: "INCREMENT_COUNT"
-		});
-	}
-
-	function decrementCount() {
-		dispatch({
-			type: "DECREMENT_COUNT"
-		});
-	}
-
-	return (
-		<div>
-			<h2>Counter: {count}</h2>
-			<button onClick={incrementCount}>+</button>
-			<button onClick={decrementCount}>-</button>
-			<div>
-				<h3>Your name is: {name}</h3>
-			</div>
-		</div>
-	);
-}
-
-function Name() {
-	const dispatch = useDispatch();
-
-	function handleUpdateName(event) {
-		dispatch({
-			type: "UPDATE_NAME",
-			payload: event.target.value
-		});
-	}
-
-	return (
-		<div>
-			<input placeholder="Input name here" onChange={handleUpdateName} />
-		</div>
-	);
-}
-
-export default App;
+export default withCookies(App);
